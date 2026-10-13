@@ -12,7 +12,11 @@
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#1B2E3A">
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    document.documentElement.classList.add("js");
+    // If one of your photos hasn't been uploaded yet, show the sample photo instead
+    function useFallback(img) { if (img.dataset.fallback && img.src !== img.dataset.fallback) { img.onerror = null; img.src = img.dataset.fallback; } }
+  </script>
 
   <!-- Free Google Fonts (falls back to system fonts if unavailable) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -168,7 +172,9 @@
       display: flex; align-items: flex-end; overflow: hidden; background: var(--navy);
     }
     .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .hero::after { content: ""; position: absolute; inset: 0; background: rgba(19, 32, 41, 0.5); }
+    .hero::after { content: ""; position: absolute; inset: 0; background: rgba(19, 32, 41, 0.55); }
+    .hero .wrap { text-shadow: 0 1px 24px rgba(10, 18, 24, 0.45); }  /* keeps text crisp over busy photos */
+    .hero .btn { text-shadow: none; }
     .hero .wrap { position: relative; z-index: 1; width: 100%; padding-bottom: clamp(64px, 12vh, 140px); }
     .hero .label { color: rgba(251, 248, 243, 0.85); }
     .hero h1 { color: var(--white); font-size: clamp(46px, 6.6vw, 100px); line-height: 1.02; letter-spacing: -0.02em; max-width: 16ch; margin-bottom: 32px; }
@@ -247,9 +253,9 @@
     }
 
     /* ============ IMAGE BAND ============ */
-    .band { position: relative; height: clamp(420px, 70vh, 720px); display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
-    .band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .band::after { content: ""; position: absolute; inset: 0; background: rgba(19, 32, 41, 0.38); }
+    .band { position: relative; height: clamp(420px, 70vh, 720px); display: flex; align-items: flex-start; justify-content: center; text-align: center; overflow: hidden; padding-top: clamp(48px, 8vh, 72px); }
+    .band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 70%; }
+    .band::after { content: ""; position: absolute; inset: 0; background: rgba(19, 32, 41, 0.3); }
     .band p { position: relative; z-index: 1; color: var(--white); font-family: var(--serif); font-weight: 300; font-size: clamp(34px, 4.6vw, 64px); line-height: 1.15; margin: 0; padding: 0 var(--gutter); }
     .band p em { color: var(--gold); }
 
@@ -344,7 +350,7 @@
       /* Hero grows with its content so nothing is ever hidden under the menu */
       .hero { height: auto; min-height: 100vh; min-height: 100svh; }
       .hero .wrap { padding-top: 132px; padding-bottom: 56px; }
-      .hero > img { object-position: 42% center; }
+      .hero > img { object-position: center; }
       .hero h1 { font-size: clamp(40px, 11.6vw, 52px); margin-bottom: 24px; }
       .hero p { font-size: 16px; margin-bottom: 36px; }
       .hero-actions { flex-direction: column; align-items: stretch; gap: 8px; }
@@ -422,9 +428,9 @@
   <main id="main" tabindex="-1">
     <!-- ============ HERO ============ -->
     <section class="hero" id="home">
-      <!-- REPLACE: your best hero photograph, e.g. src="images/hero.jpg" -->
-      <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=2200&q=80"
-           alt="Wedding aisle lined with white and blush floral arrangements" fetchpriority="high">
+      <!-- PHOTO: upload images/hero.jpg (wide landscape photo) -->
+      <img src="images/hero.jpg" data-fallback="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=2200&q=80" onerror="useFallback(this)"
+           alt="Wedding stage with cascading crystal strands, hanging florals, candles and a flower-lined walkway" fetchpriority="high">
       <div class="wrap">
         <span class="label">Turning dreams into reality</span>
         <h1>Every Celebration, <em>Beautifully Curated</em></h1>
@@ -448,9 +454,9 @@
     <section class="section about" id="about">
       <div class="wrap">
         <div class="about-img reveal">
-          <!-- REPLACE: a photograph of your team or one of your setups -->
-          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1400&q=80"
-               alt="Long reception table dressed in white linen with garden florals" loading="lazy">
+          <!-- PHOTO: upload images/about.jpg (portrait photo) -->
+          <img src="images/about.jpg" data-fallback="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1400&q=80" onerror="useFallback(this)"
+               alt="Tall crystal candelabra centrepiece with red lilies and anthuriums on a velvet table runner" loading="lazy">
         </div>
         <div class="reveal">
           <span class="label">About</span>
@@ -472,39 +478,41 @@
           </div>
           <p>Full planning or décor alone, each service is shaped around your guest list, venue and vision.</p>
         </div>
+        <!-- PHOTOS: upload images/service-weddings.jpg, service-birthdays.jpg, service-anniversaries.jpg,
+             service-family.jpg, service-corporate.jpg and service-special.jpg (portrait photos) -->
         <div class="services-grid">
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&h=1125&q=80" alt="Couple's hands with wedding rings and a soft peach bouquet" loading="lazy"></div>
+            <div class="img"><img src="images/service-weddings.jpg" data-fallback="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Bride's hennaed hand on the groom's arm, with bangles and an embroidered lehenga" loading="lazy"></div>
             <span class="num">01</span>
             <h3>Wedding Planning &amp; Décor</h3>
             <p>Complete planning and bespoke décor for every ceremony, from mehendi to reception.</p>
           </article>
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&h=1125&q=80" alt="Celebration cake on a cake stand against a dark backdrop" loading="lazy"></div>
+            <div class="img"><img src="images/service-birthdays.jpg" data-fallback="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Celebration cake on a cake stand against a dark backdrop" loading="lazy"></div>
             <span class="num">02</span>
             <h3>Birthday Celebrations</h3>
             <p>Thoughtfully themed birthdays for little ones, milestone years and everything in between.</p>
           </article>
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=900&h=1125&q=80" alt="Two rings resting on blush roses" loading="lazy"></div>
+            <div class="img"><img src="images/service-anniversaries.jpg" data-fallback="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Engraved gold wedding bands resting on white petals" loading="lazy"></div>
             <span class="num">03</span>
             <h3>Anniversaries</h3>
             <p>Intimate dinners or grand evenings that honour the years you have shared.</p>
           </article>
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&h=1125&q=80" alt="Dinner table with fresh flowers and glassware" loading="lazy"></div>
+            <div class="img"><img src="images/service-family.jpg" data-fallback="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Dinner table with fresh flowers and glassware" loading="lazy"></div>
             <span class="num">04</span>
             <h3>Family Gatherings</h3>
             <p>Naming ceremonies, housewarmings, reunions and festive get-togethers, warmly styled.</p>
           </article>
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&h=1125&q=80" alt="Bright conference hall set for a corporate event" loading="lazy"></div>
+            <div class="img"><img src="images/service-corporate.jpg" data-fallback="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Bright conference hall set for a corporate event" loading="lazy"></div>
             <span class="num">05</span>
             <h3>Corporate Events</h3>
             <p>Launches, offsites, award nights and client evenings, polished and on-brand.</p>
           </article>
           <article class="service reveal">
-            <div class="img"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=900&h=1125&q=80" alt="Guests raising a toast at an evening celebration" loading="lazy"></div>
+            <div class="img"><img src="images/service-special.jpg" data-fallback="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=900&h=1125&q=80" onerror="useFallback(this)" alt="Guests raising a toast at an evening celebration" loading="lazy"></div>
             <span class="num">06</span>
             <h3>Special Occasions</h3>
             <p>Proposals, baby showers, engagements and every moment worth marking beautifully.</p>
@@ -531,61 +539,59 @@
         </div>
 
         <!--
-          HOW TO USE YOUR OWN PHOTOS
-          1. Upload photos into the "images" folder of your GitHub repository.
-          2. Change each src="..." to your file, e.g. src="images/wedding-1.jpg"
-          3. Update the alt text and caption.
-          4. Keep data-category as "weddings", "birthdays" or "special" so the filters work.
-          5. Add class "wide" to a photo to make it span two columns (landscape photos look best there).
+          PORTFOLIO PHOTOS: upload images/portfolio-01.jpg to images/portfolio-10.jpg (in the order below).
+          portfolio-01 and portfolio-07 span two columns, so landscape photos look best there; the rest are portrait.
+          Also update each caption and alt text to describe your event, and keep data-category as
+          "weddings", "birthdays" or "special" so the filters work.
         -->
         <div class="gallery" id="gallery">
           <figure class="work wide" data-category="weddings">
-            <div class="img"><img src="https://images.unsplash.com/photo-1587271407850-8d438ca9fdf2?auto=format&fit=crop&w=1600&h=1000&q=80" alt="Indian wedding mandap with white florals, candles and a grand chandelier" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-01.jpg" data-fallback="https://images.unsplash.com/photo-1587271407850-8d438ca9fdf2?auto=format&fit=crop&w=1600&h=1000&q=80" onerror="useFallback(this)" alt="Indian wedding mandap with white florals, candles and a grand chandelier" loading="lazy"></div>
             <figcaption><span>Mandap Stage</span><small>Wedding</small></figcaption>
             <button type="button" aria-label="View larger: Mandap Stage"></button>
           </figure>
           <figure class="work" data-category="weddings">
-            <div class="img"><img src="https://images.unsplash.com/photo-1525772764200-be829a350797?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Blush roses and tall white candles on a reception table" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-02.jpg" data-fallback="https://images.unsplash.com/photo-1525772764200-be829a350797?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Blush roses and tall white candles on a reception table" loading="lazy"></div>
             <figcaption><span>Candlelit Florals</span><small>Wedding</small></figcaption>
             <button type="button" aria-label="View larger: Candlelit Florals"></button>
           </figure>
           <figure class="work" data-category="birthdays">
-            <div class="img"><img src="https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Birthday dessert table with cakes, flowers and candles" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-03.jpg" data-fallback="https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Birthday dessert table with cakes, flowers and candles" loading="lazy"></div>
             <figcaption><span>Dessert Table</span><small>Birthday</small></figcaption>
             <button type="button" aria-label="View larger: Dessert Table"></button>
           </figure>
           <figure class="work" data-category="weddings">
-            <div class="img"><img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Floral-dressed pavilion set for a garden ceremony" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-04.jpg" data-fallback="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Floral-dressed pavilion set for a garden ceremony" loading="lazy"></div>
             <figcaption><span>Garden Pavilion</span><small>Wedding</small></figcaption>
             <button type="button" aria-label="View larger: Garden Pavilion"></button>
           </figure>
           <figure class="work" data-category="special">
-            <div class="img"><img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Guests clinking wine glasses at a celebration" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-05.jpg" data-fallback="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Guests clinking wine glasses at a celebration" loading="lazy"></div>
             <figcaption><span>Evening Toast</span><small>Special Event</small></figcaption>
             <button type="button" aria-label="View larger: Evening Toast"></button>
           </figure>
           <figure class="work" data-category="birthdays">
-            <div class="img"><img src="https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Three-tier white cake decorated with fresh pink roses" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-06.jpg" data-fallback="https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Three-tier white cake decorated with fresh pink roses" loading="lazy"></div>
             <figcaption><span>Floral Cake</span><small>Birthday</small></figcaption>
             <button type="button" aria-label="View larger: Floral Cake"></button>
           </figure>
           <figure class="work wide" data-category="special">
-            <div class="img"><img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1600&h=1000&q=80" alt="Banquet hall with round tables and chandeliers" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-07.jpg" data-fallback="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1600&h=1000&q=80" onerror="useFallback(this)" alt="Banquet hall with round tables and chandeliers" loading="lazy"></div>
             <figcaption><span>Banquet Setting</span><small>Special Event</small></figcaption>
             <button type="button" aria-label="View larger: Banquet Setting"></button>
           </figure>
           <figure class="work" data-category="weddings">
-            <div class="img"><img src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Wooden ceremony arch with draped fabric and florals" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-08.jpg" data-fallback="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Wooden ceremony arch with draped fabric and florals" loading="lazy"></div>
             <figcaption><span>Ceremony Arch</span><small>Wedding</small></figcaption>
             <button type="button" aria-label="View larger: Ceremony Arch"></button>
           </figure>
           <figure class="work" data-category="birthdays">
-            <div class="img"><img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Dessert plate decorated with Happy Birthday lettering" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-09.jpg" data-fallback="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Dessert plate decorated with Happy Birthday lettering" loading="lazy"></div>
             <figcaption><span>Dessert Details</span><small>Birthday</small></figcaption>
             <button type="button" aria-label="View larger: Dessert Details"></button>
           </figure>
           <figure class="work" data-category="special">
-            <div class="img"><img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1000&h=1250&q=80" alt="Audience watching a presentation at a corporate event" loading="lazy"></div>
+            <div class="img"><img src="images/portfolio-10.jpg" data-fallback="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1000&h=1250&q=80" onerror="useFallback(this)" alt="Audience watching a presentation at a corporate event" loading="lazy"></div>
             <figcaption><span>Corporate Evening</span><small>Special Event</small></figcaption>
             <button type="button" aria-label="View larger: Corporate Evening"></button>
           </figure>
@@ -596,8 +602,8 @@
 
     <!-- ============ IMAGE BAND ============ -->
     <div class="band">
-      <!-- REPLACE: a wide, calm photograph -->
-      <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=2200&q=80" alt="" loading="lazy">
+      <!-- PHOTO: upload images/band.jpg (wide landscape photo; the text sits over the top part, so keep the top of the photo calm) -->
+      <img src="images/band.jpg" data-fallback="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=2200&q=80" onerror="useFallback(this)" alt="" loading="lazy">
       <p class="reveal">Planned with care.<br><em>Styled with intention.</em></p>
     </div>
 
@@ -669,9 +675,9 @@
     <section class="section contact" id="contact">
       <div class="wrap">
         <div class="contact-img reveal">
-          <!-- REPLACE: a photograph from one of your events -->
-          <img src="https://images.unsplash.com/photo-1546032996-6dfacbacbf3f?auto=format&fit=crop&w=1200&h=1500&q=80"
-               alt="Couple embracing beneath a flowing wedding veil" loading="lazy">
+          <!-- PHOTO: upload images/contact.jpg (portrait photo) -->
+          <img src="images/contact.jpg" data-fallback="https://images.unsplash.com/photo-1546032996-6dfacbacbf3f?auto=format&fit=crop&w=1200&h=1500&q=80" onerror="useFallback(this)"
+               alt="Smiling bride beneath her veil as the groom lifts it" loading="lazy">
         </div>
         <div class="reveal">
           <span class="label">Contact</span>
@@ -916,8 +922,12 @@
   =====================================================================
   QUICK EDIT GUIDE
   • Contact details: fill in the CONTACT settings inside the <script> above.
-  • Photos: search this file for "REPLACE" and swap each src="..." for your own
-    photo, e.g. src="images/wedding-1.jpg" (upload the photo into an "images" folder).
+  • Photos: just upload your photos into the "images" folder using these exact names
+    (lowercase, ending in .jpg). Any photo not uploaded yet shows a sample photo instead.
+      hero.jpg  about.jpg  band.jpg  contact.jpg
+      service-weddings.jpg  service-birthdays.jpg  service-anniversaries.jpg
+      service-family.jpg  service-corporate.jpg  service-special.jpg
+      portfolio-01.jpg ... portfolio-10.jpg
   • Logo: upload these three files into a folder called "images":
       images/logo-light-nav.png   (white and gold, used over the hero photo)
       images/logo-navy-nav.png    (navy and gold, used on the white menu bar)
